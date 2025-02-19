@@ -6,7 +6,7 @@ class Compte{
     private $solde;
     private $dateCreation;
 
-    public function __construct( $numero,  $solde,  $dateCreation){
+    public function __construct( $numero,  $solde,  $dateCreation = new DateTime()){
         $this->numero = $numero;
         $this->solde = $solde;
         $this->dateCreation = $dateCreation;
