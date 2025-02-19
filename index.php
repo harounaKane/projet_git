@@ -5,20 +5,24 @@ include_once('classes/Compte.php');
 
 $manager = new CompteManager();
 
+//teste si $_GET action est defini
 if( isset($_GET['action']) ){
     extract($_GET);
 
+    // selon 'action'
     switch($action){
         case "lire":
+            // Récupère tous les comptes
             $comptes = $manager->lireComptes();
        
             include "vue/liste.php";
             break;
         case "ajouter":
-
+            // Test si le formulaier ajouter est soumis
             if( isset($_POST['solde']) ){
                 $compte = new Compte(0, $_POST['solde']);
                 
+                // en paramètre le compte à ajouter dans à la bd
                 $manager->ajouterCompte($compte);
 
                 header("location: ?action=lire");
