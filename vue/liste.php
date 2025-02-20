@@ -20,7 +20,8 @@
                 <td> <?= $compte->getSolde(); ?> </td>
                 <td> <?= $compte->getDateCreation(); ?> </td>
                 <td>
-                    <a href="">|</a>
+                    <a href="?action=delete&numero=<?= $compte->getNumero(); ?>">X</a> |
+                    <a href="?action=update&numero=<?= $compte->getNumero(); ?>">U</a> 
                 </td>
             </tr>
         <?php endforeach; ?>

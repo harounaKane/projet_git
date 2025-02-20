@@ -1,3 +1,21 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <nav>
+        <a href="?action=lire">Lire</a>
+        <a href="?action=ajouter">Ajouter</a>
+    </nav>
+    
+</body>
+</html>
+
 <?php
 
 include_once('CompteManager.php');
@@ -31,24 +49,32 @@ if( isset($_GET['action']) ){
 
             include "vue/ajouter.php";
             break;
+        
+            case "delete":
+                $manager->supprimerComptes($numero);
+                header("location: ?action=lire");
+                exit;
+
+            case "update":
+
+                // Test si le formulaier update est soumis
+                if( isset($_POST['solde']) ){
+                    $compte = new Compte($numero, $_POST['solde']);
+                    
+                    // en paramètre le compte à ajouter dans à la bd
+                    $manager->updateComptes($compte);
+   
+                    header("location: ?action=lire");
+                    exit;
+                }
+
+                $compte = $manager->lireUnCompte($numero);
+                
+                include "vue/ajouter.php";
+                break;
+            
     }
 }
 
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-
-    <nav>
-        <a href="?action=lire">Lire</a>
-        <a href="?action=ajouter">Ajouter</a>
-    </nav>
-    
-</body>
-</html>
