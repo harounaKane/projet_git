@@ -4,26 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>Document</title>
 </head>
 <body>
 
-    <nav>
-        <a href="?action=lire">Lire</a>
-        <a href="?action=ajouter">Ajouter</a>
+    <nav class="p-3">
+        <a href="?action=lire" class="btn btn-success">Consulter les comptes</a>
+        <a href="?action=ajouter" class="btn btn-success">Ajouter un compte</a>
+        <a href="?actionBanque=lire" class="btn btn-success">Lister les banques</a>
+        <a href="?actionBanque=ajouter" class="btn btn-success">Ajouter une banque</a>
     </nav>
     
-</body>
-</html>
 
 <?php
 
 include_once('CompteManager.php');
+include_once("BanqueManager.php");
+
 include_once('classes/Compte.php');
+include_once('classes/Banque.php');
 
 $manager = new CompteManager();
+$managerBanque = new BanqueManager();
 
-//teste si $_GET action est defini
+//teste si $_GET action est defini (POUR COMPTE)
 if( isset($_GET['action']) ){
     extract($_GET);
 
@@ -61,7 +66,7 @@ if( isset($_GET['action']) ){
                 if( isset($_POST['solde']) ){
                     $compte = new Compte($numero, $_POST['solde']);
                     
-                    // en paramètre le compte à ajouter dans à la bd
+                    // en paramètre le compte à modofier dans la bd
                     $manager->updateComptes($compte);
    
                     header("location: ?action=lire");
@@ -73,6 +78,50 @@ if( isset($_GET['action']) ){
                 include "vue/ajouter.php";
                 break;
             
+    }
+}else if( isset($_GET['actionBanque']) ){ // ACTIONS POUR BANQUE
+    extract($_GET);
+
+    // selon 'action'
+    switch($actionBanque){
+        case "lire":
+            $banques = $managerBanque->lire();
+            include "vue/listeBanque.php";
+            break;
+        
+        case "ajouter":
+
+            if( isset($_POST['ville']) ){
+                $banque = new Banque(0, $_POST['nom'], $_POST['ville']);
+
+                $managerBanque->ajouter($banque);
+
+                header("location: ?actionBanque=lire");
+                exit;
+            }
+
+            include "vue/ajouterBanque.php";
+            break;
+
+        case "delete":
+            $managerBanque->delete($numero);
+
+            header("location: ?actionBanque=lire");
+            exit;
+
+        case "update":
+
+            if( isset($_POST['ville']) ){
+                $banque = new Banque($numero, $_POST['nom'],  $_POST['ville']);
+
+                $managerBanque->update($banque);
+                header("location: ?actionBanque=lire");
+                exit;
+            }
+
+            $banque = $managerBanque->lireUneBanque($numero);
+            include "vue/ajouterBanque.php";
+            break;
     }
 }
 

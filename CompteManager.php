@@ -12,7 +12,6 @@ class CompteManager{
     }
 
 
-
     public function ajouterCompte(Compte $compte){
         $query = "INSERT INTO compte(solde) VALUES(:solde)";
 
