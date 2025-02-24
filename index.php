@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>Document</title>
 </head>
-<body>
+<body class="container-fluid">
 
     <nav class="p-3">
         <a href="?action=lire" class="btn btn-success">Consulter les comptes</a>
@@ -43,7 +43,7 @@ if( isset($_GET['action']) ){
         case "ajouter":
             // Test si le formulaier ajouter est soumis
             if( isset($_POST['solde']) ){
-                $compte = new Compte(0, $_POST['solde']);
+                $compte = new Compte(0, $_POST['solde'], $_POST['banqueId']);
                 
                 // en paramètre le compte à ajouter dans à la bd
                 $manager->ajouterCompte($compte);
@@ -52,6 +52,7 @@ if( isset($_GET['action']) ){
                 exit;
             }
 
+            $banques = $managerBanque->lire();
             include "vue/ajouter.php";
             break;
         
@@ -64,7 +65,7 @@ if( isset($_GET['action']) ){
 
                 // Test si le formulaier update est soumis
                 if( isset($_POST['solde']) ){
-                    $compte = new Compte($numero, $_POST['solde']);
+                    $compte = new Compte($numero, $_POST['solde'], $_POST['banqueId']);
                     
                     // en paramètre le compte à modofier dans la bd
                     $manager->updateComptes($compte);

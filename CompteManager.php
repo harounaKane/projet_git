@@ -13,11 +13,14 @@ class CompteManager{
 
 
     public function ajouterCompte(Compte $compte){
-        $query = "INSERT INTO compte(solde) VALUES(:solde)";
+        $query = "INSERT INTO compte(solde, banqueId) VALUES(:solde, :banque)";
 
         $stmt = $this->pdo->prepare($query);
 
-        $stmt->execute(["solde" => $compte->getSolde()]);
+        $stmt->execute([
+            "solde" => $compte->getSolde(),
+            "banque" => $compte->getBanqueId()
+        ]);
 
     }
 
@@ -31,7 +34,7 @@ class CompteManager{
         $tab = [];
 
         while($res = $stmt->fetch()){
-            $c = new Compte($res['numero'], $res['solde'], $res['dateCreation']);
+            $c = new Compte($res['numero'], $res['solde'], $res['banqueId'], $res['dateCreation']);
             $tab[] = $c;
         }
 
@@ -45,7 +48,7 @@ class CompteManager{
         $stmt->execute(["id" => $numero]);
 
         $res = $stmt->fetch();
-        $compte = new Compte($res['numero'], $res['solde'], $res['dateCreation']);
+        $compte = new Compte($res['numero'], $res['solde'], $res['solde'], $res['dateCreation']);
       
 
         return $compte;
